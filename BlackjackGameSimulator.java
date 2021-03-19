@@ -1,5 +1,7 @@
 public class BlackjackGameSimulator {
     public static void main(String[] args) {
-        System.out.println("Hello world");
+        Card diamond = new Card();
+
+        diamond.printCardSymbol();
     }
 }
