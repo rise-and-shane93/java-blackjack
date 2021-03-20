@@ -22,6 +22,7 @@ public class Card {
 
         String stringArrElement = cardArr[cardRandomNum];
         int result = 0;
+        
 
         switch (stringArrElement) {
             case "2", "3", "4", "5", "6", "7", "8", "9", "10":
@@ -31,7 +32,8 @@ public class Card {
                 result = 10;
                 break;
             case "A":
-                result = 1;
+                result = 11;
+                System.out.print("You drew an ace. Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
                 break;
         }
         return result;
@@ -49,5 +51,13 @@ public class Card {
 
     public void printCardSymbol() {
         System.out.println(this.cardName);
+    }
+
+    public String getCardName() {
+        return this.cardName;
+    }
+
+    public int getCardValue() {
+        return this.cardValue;
     }
 }
