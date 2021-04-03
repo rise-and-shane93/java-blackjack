@@ -25,27 +25,39 @@ public class BlackjackGameSimulator {
 
     public static void blackjackGame(Player player, Dealer dealer, int moneyStart, Scanner scanner) {
         int playerMoneyStart = moneyStart;
-        boolean hitOrStay = false;
-        boolean winOrLose = true;
-        // String 
+        String playerHitOrStay;
+        boolean boolHitOrStay = false;
 
         dealer.drawCard(Participant.CARDS_TO_START, true);
 
         player.drawCard(Participant.CARDS_TO_START, true);
+        boolean initialWin = player.checkIfWinLose(player.playerHandValue);
 
-        System.out.print("It's your turn. Would you like to hit or stay? Press Y for hit or N for stay: ");
-
-        hitOrStay = scanner.nextLine() == "Y" ? true : false;
-        // if (inp)
-        while (hitOrStay || winOrLose) {
-            player.drawCard(1, false);
-            winOrLose = player.checkIfWinLose(player.playerHandValue);
+        if (initialWin) {
+            System.out.println("You win!");
+        } else {
             System.out.print("It's your turn. Would you like to hit or stay? Press Y for hit or N for stay: ");
-            hitOrStay = scanner.nextLine() == "Y" ? true : false;
-        }
 
-        System.out.println("out of while loop");
-        // player.drawCard(1, false);
-        // player.getHandValue();
+            playerHitOrStay = scanner.nextLine();
+            boolHitOrStay = playerHitOrStay.toUpperCase().equals("Y") ? true : false;
+        }
+        
+        while (boolHitOrStay && !initialWin) {
+            player.drawCard(1, false);
+            int playerCurrHandValue = player.playerHandValue;
+            if (playerCurrHandValue > 21) {
+                System.out.println("you lose");
+                boolHitOrStay = false;
+                break;
+            } else if (playerCurrHandValue == 21) {
+                System.out.println("you win");
+                boolHitOrStay = false;
+                break;
+            } else {
+                System.out.print("Would you like to hit or stay? Press Y for hit or N for stay: ");
+                boolHitOrStay = scanner.nextLine().toUpperCase().equals("Y") ? true : false;
+            }
+        }
+        System.out.println(player.playerHandValue);
     }
 }

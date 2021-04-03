@@ -36,12 +36,12 @@ public class Card {
             case "A":
                 // result = 11;
                 // Bring this up in the one on one
-                System.out.print("You drew an ace. Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
-                result = input.nextInt();
-                while (result != 1 && result != 11) {
-                    System.out.print("Incorrect input. Please Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
-                    result = input.nextInt();
-                }
+                // System.out.print("You drew an ace. Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
+                // result = input.nextInt();
+                // while (result != 1 && result != 11) {
+                //     System.out.print("Incorrect input. Please Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
+                //     result = input.nextInt();
+                // }
                 
                 break;
         }
