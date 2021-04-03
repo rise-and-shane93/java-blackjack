@@ -1,14 +1,15 @@
 public class Player implements Participant {
 
-    private int playerMoneyStart;
+    public int playerMoney;
     public int playerHandValue;
     private Card[] currentHand;
     private boolean playerWinOrLose;
     private boolean hasAce;
     private boolean hasAceHighValue;
+    public boolean outOfMoney;
 
     public Player(int playerMoneyStart) {
-        this.playerMoneyStart = playerMoneyStart;
+        this.playerMoney = playerMoneyStart;
     }
 
     public void drawCard(int cardsToDraw, boolean firstDraw) {
