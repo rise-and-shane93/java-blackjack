@@ -28,30 +28,85 @@ public class BlackjackGameSimulator {
             System.out.print("That's more than the money you have. Enter a lower number: ");
             moneyToBet = input.nextInt();
         }
-
-        blackjackGame(you, dealer, moneyStart, input, moneyToBet);
+        // input.close();
+        blackjackGame(you, dealer, moneyStart, moneyToBet);
     }
 
-    public static void blackjackGame(Player player, Dealer dealer, int moneyStart, Scanner scanner, int moneyToBet) {
+    public static void blackjackGame(Player player, Dealer dealer, int moneyStart, int moneyToBet) {
+        Scanner scanner = new Scanner(System.in);
+        String playerPlayAgainString = "";
+        boolean playerPlayAgain = true;
+        String playerGameResult = "";
+        String dealerGameResult = "";
+        
+        while(!player.outOfMoney && playerPlayAgain) {
+            playerGameResult = playerDrawCards(player, dealer, moneyStart, moneyToBet);
+            if (playerGameResult.equals("player stays")) {
+                dealerGameResult = dealerDrawCards(dealer);
+                if (dealerGameResult.equals("Dealer wins")) {
+                    player.playerMoney -= moneyToBet;
+                    System.out.println("You lost $" + moneyToBet + ". You now have $" + player.playerMoney + " left");
+                } else if (dealerGameResult.equals("Dealer busts")) {
+                    player.playerMoney += moneyToBet;
+                    System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
+                } else if (dealerGameResult.equals("Dealer has above 17 but less than 21")) {
+                    if (player.playerHandValue > dealer.dealerHandValue) {
+                        player.playerMoney += moneyToBet;
+                        System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
+                    } else if (player.playerHandValue == dealer.dealerHandValue) {
+                        System.out.println("This game ended in a tie. You neither gained nor lost any money.");
+                    } else {
+                        player.playerMoney -= moneyToBet;
+                        System.out.println("You lost $" + moneyToBet + ". You now have $" + player.playerMoney + " left");
+                    }
+                }
+            } else if (playerGameResult.equals("player loses and has run out of money")) {
+                playerPlayAgain = false;
+                break;
+            }
+            System.out.print("Would you like to play again? Press Y for yes or N for no: ");
+            playerPlayAgainString = scanner.next();
+            playerPlayAgain = playerPlayAgainString.toUpperCase().equals("Y") ? true : false;
+
+            if (playerPlayAgain) {
+                player.playerHandValue = 0;
+                dealer.dealerHandValue = 0;
+                // player.currentHand
+            }
+        }
+
+        System.out.println("Thank you for playing.");
+        
+    }
+
+    public static String playerDrawCards(Player player, Dealer dealer, int moneyToStart, int moneyToBet) {
+        Scanner scanner = new Scanner(System.in);
         // int playerMoneyStart = moneyStart;
+        String playerGameResult = "";
         String playerHitOrStay;
         boolean boolHitOrStay = false;
-        // boolean outOfMoney = false;
-
-        player.drawCard(Participant.CARDS_TO_START, true);
+        boolean playerLosesOnOwnTurn = false;
+        boolean playerPlayAgain = false;
+        boolean playerWins = false;
         
+        // while (!player.outOfMoney && )
+        player.drawCard(Participant.CARDS_TO_START, true);
+
         boolean initialWin = player.checkIfWinLose(player.playerHandValue);
         if (initialWin) {
             System.out.println("You win!");
+            playerWins = true;
+            playerGameResult = "player wins";
         } else {
             dealer.drawCard(Participant.CARDS_TO_START, true);
             System.out.print("It's your turn. Would you like to hit or stay? Press Y for hit or N for stay: ");
 
-            playerHitOrStay = scanner.nextLine();
+            playerHitOrStay = scanner.next();
             boolHitOrStay = playerHitOrStay.toUpperCase().equals("Y") ? true : false;
         }
-        
+
         while (boolHitOrStay && !initialWin) {
+            dealer.showHandStart(dealer.currentHand);
             player.drawCard(1, false);
             int playerCurrHandValue = player.playerHandValue;
             if (playerCurrHandValue > 21) {
@@ -59,30 +114,56 @@ public class BlackjackGameSimulator {
                 if (player.playerMoney == 0) {
                     player.outOfMoney = true;
                     System.out.println("Sorry, you have run out of money.");
-                    break;
+                    playerGameResult = "player loses and has run out of money";
                 } else {
                     System.out.println("You busted and lost $" + moneyToBet + ". You now have $" + player.playerMoney + " left");
                     boolHitOrStay = false;
-                    break;
+                    playerGameResult = "player loses";
                 }
+                playerLosesOnOwnTurn = true;
+                break;
             } else if (playerCurrHandValue == 21) {
                 player.playerMoney += moneyToBet;
                 System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
                 boolHitOrStay = false;
+                playerWins = true;
+                playerGameResult = "player wins";
                 break;
             } else {
                 System.out.print("Would you like to hit or stay? Press Y for hit or N for stay: ");
-                boolHitOrStay = scanner.nextLine().toUpperCase().equals("Y") ? true : false;
+                boolHitOrStay = scanner.next().toUpperCase().equals("Y") ? true : false;
             }
         }
+
+        if (!boolHitOrStay && !playerLosesOnOwnTurn && !playerWins) {
+            playerGameResult = "player stays";
+        }
         // System.out.println(player.playerHandValue);
+        return playerGameResult;
     }
 
-    public static String playerDrawCards(Player player, int moneyToStart, int moneyToBet, Scanner scanner) {
+    public static String dealerDrawCards(Dealer dealer) {
+        String result = "";
+        System.out.println("dealer's turn");
 
-    }
-
-    public static void dealerDrawCards(Dealer dealer) {
-
+        dealer.showEntireHand(dealer.currentHand);
+        System.out.println(dealer.dealerHandValue);
+        if (dealer.dealerHandValue == 21) {
+            result = "Dealer wins";
+            System.out.println(result);
+        } else {
+            while (dealer.dealerHandValue <= 17) {
+                dealer.drawCard(1, false);
+                if (dealer.dealerHandValue > 21) {
+                    result = "Dealer busts";
+                    System.out.println(result);
+                    break;
+                } else {
+                    result = "Dealer has above 17 but less than 21";
+                }
+            }
+            // System.out.println(dealer.dealerHandValue);
+        }
+        return result;
     }
 }

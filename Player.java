@@ -58,13 +58,13 @@ public class Player implements Participant {
                 } else {
 
                     if (cardToDraw.getCardAlphaNumValue() == "A") {
-                        System.out.println("you drew an ace!");
+                        // System.out.println("you drew an ace!");
                         this.hasAce = true;
                         if (this.playerHandValue + 11 > 21) {
-                            System.out.println("ace low value");
+                            // System.out.println("ace low value");
                             cardToDraw.cardValue = 1;
                         } else {
-                            System.out.println("ace high value");
+                            // System.out.println("ace high value");
                             cardToDraw.cardValue = 11;
                             this.hasAceHighValue = true;
                         }
@@ -81,15 +81,17 @@ public class Player implements Participant {
                 System.out.print(updatedHand[j].getCardName() + " ");
                 this.playerHandValue += updatedHand[j].getCardValue();
             }
+            System.out.println();
 
             // convert ace from 11 to 1 if player would otherwise bust
             if (this.playerHandValue > 21 && this.hasAceHighValue) {
-                System.out.println("has ace so take off 10 points");
+                // System.out.println("has ace so take off 10 points");
                 this.playerHandValue -= 10;
                 this.hasAce = false;
-            } else {
+            } /*else {
+                This was for checking that the player did not draw an ace
                 System.out.println("no ace");
-            }
+            }*/
             
         }
         // checkIfWinLose(this.playerHandValue);
@@ -101,7 +103,7 @@ public class Player implements Participant {
     }
 
     public void displayStartingMoney() {
-        System.out.println(playerMoneyStart);
+        System.out.println(playerMoney);
     }
 
     public boolean checkIfWinLose(int handValue) {
