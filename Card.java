@@ -73,22 +73,46 @@ public class Card {
         return symbols[randomNumberSymbol];
     }
 
-    public void printCardSymbol() {
-        System.out.println(this.cardName);
-    }
-
+    /**
+     * This method returns the card name.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return String that is the card value and the symbol
+     */
     public String getCardName() {
         return this.cardName;
     }
 
+    /**
+     * This method returns a random number/face/ace card from the card array.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return String that represents the number or letter of the card (2-10, a face card or an ace)
+     */
     public String getCardAlphaNumValue() {
         return cardArr[cardRandomNum];
     }
 
+    /**
+     * This method returns the card symbol.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return String that represents the card symbol
+     */
     public String getCardSymbol() {
         return this.cardSymbol;
     }
 
+    /**
+     * This method returns the card's numeric value
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return int that represents the card's value
+     */
     public int getCardValue() {
         return this.cardValue;
     }
