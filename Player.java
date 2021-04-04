@@ -50,7 +50,7 @@ public class Player implements Participant {
         } else {
             Card cardToDraw = new Card();
             int numCardsInCurrentHand = currentHand.length;
-            Card[] updatedHand = new Card[numCardsInCurrentHand + 1];
+            Card[] updatedHand = new Card[numCardsInCurrentHand + cardsToDraw];
 
             for (int i = 0; i < updatedHand.length; i++) {
                 if (i < numCardsInCurrentHand) {
@@ -58,13 +58,10 @@ public class Player implements Participant {
                 } else {
 
                     if (cardToDraw.getCardAlphaNumValue() == "A") {
-                        // System.out.println("you drew an ace!");
                         this.hasAce = true;
                         if (this.playerHandValue + 11 > 21) {
-                            // System.out.println("ace low value");
                             cardToDraw.cardValue = 1;
                         } else {
-                            // System.out.println("ace high value");
                             cardToDraw.cardValue = 11;
                             this.hasAceHighValue = true;
                         }
@@ -95,7 +92,7 @@ public class Player implements Participant {
             
         }
         // checkIfWinLose(this.playerHandValue);
-        System.out.println("\n" + this.playerHandValue);
+        // System.out.println("\n" + this.playerHandValue);
     }
 
     public void getHandValue() {

@@ -5,10 +5,21 @@ public class Dealer implements Participant {
     private boolean hasAce;
     private boolean hasAceHighValue;
     
+    /**
+     * This method handles the actual drawing and displaying of cards as well as adding each card's value to the
+     * dealer's points. The method's behavior is determined of whether the dealer draws the first two cards or
+     * drawing one card after the start of the round. In addition, the method has conditional statements to handle
+     * the value of an ace if the dealer drew that card.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @param cardsToDraw
+     * @param firstDraw
+     * @return void
+     */
     public void drawCard(int cardsToDraw, boolean firstDraw) {
         if (firstDraw) {
             this.currentHand = new Card[cardsToDraw];
-            // Card[] startingCards = {new Card(), new Card()};
     
             for (int i = 0; i < cardsToDraw; i++) {
                 this.currentHand[i] = new Card();
@@ -36,7 +47,7 @@ public class Dealer implements Participant {
         } else {
             Card cardToDraw = new Card();
             int numCardsInCurrentHand = currentHand.length;
-            Card[] updatedHand = new Card[numCardsInCurrentHand + 1];
+            Card[] updatedHand = new Card[numCardsInCurrentHand + cardsToDraw];
 
             for (int i = 0; i < updatedHand.length; i++) {
                 if (i < numCardsInCurrentHand) {
@@ -44,13 +55,10 @@ public class Dealer implements Participant {
                 } else {
 
                     if (cardToDraw.getCardAlphaNumValue() == "A") {
-                        // System.out.println("you drew an ace!");
                         this.hasAce = true;
                         if (this.dealerHandValue + 11 > 21) {
-                            // System.out.println("ace low value");
                             cardToDraw.cardValue = 1;
                         } else {
-                            // System.out.println("ace high value");
                             cardToDraw.cardValue = 11;
                             this.hasAceHighValue = true;
                         }
@@ -80,9 +88,18 @@ public class Dealer implements Participant {
             }*/
             
         }
-        getHandValue();
     }
 
+    /**
+     * This method is responsible for showing the dealer's hand at the start of the game and before it's the 
+     * dealer's turn. Since the dealer is dealt one card face down, there's a conditional statement in the for
+     * loop to not display the first card's value.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @param hand The dealer's current hand of cards
+     * @return void
+     */
     public void showHandStart(Card[] hand) {
         System.out.print("\nDealer's hand: ");
         for (int i = 0; i < hand.length; i++) {
@@ -95,10 +112,26 @@ public class Dealer implements Participant {
         System.out.println();
     }
 
+    /**
+     * This method was used throughout the program's development to print the dealer's point value
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return void
+     */
     public void getHandValue() {
         System.out.println(this.dealerHandValue);
     }
 
+    /**
+     * This method is invoked when it's the dealer's turn. As opposed to the showHandStart method, this
+     * method will show the dealer's entire hand of cards.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @param hand The dealer's current hand of cards
+     * @return void
+     */
     public void showEntireHand(Card[] hand) {
         System.out.print("\nDealer's hand: ");
         for (int i = 0; i < hand.length; i++) {

@@ -8,7 +8,7 @@ public class Card {
     private String alphaNumCardValue;
     private int cardRandomNum;
 
-    private static String[] cardArr = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "K", "K", "K", "K", "K", "K", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"};
+    private static String[] cardArr = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
     private static String[] symbols = {"♥", "◆", "♠", "♣"};
     
     public Card() {
@@ -19,6 +19,15 @@ public class Card {
         this.cardName = setCardName();
     }
 
+    /**
+     * This method will set the value of the card that either the player or dealer drew. It uses the object's
+     * random number to select a random element from the cardArr array. All cards except the ace get a value
+     * as the ace has special rules.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return int that represents the number value of the card
+     */
     public int setCardValue() {
         // int randomNumberCard = (int) ( cardArr.length * Math.random() );
 
@@ -33,25 +42,31 @@ public class Card {
             case "J", "Q", "K":
                 result = 10;
                 break;
-            case "A":
-                // result = 11;
-                // Bring this up in the one on one
-                // System.out.print("You drew an ace. Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
-                // result = input.nextInt();
-                // while (result != 1 && result != 11) {
-                //     System.out.print("Incorrect input. Please Press 1 if you want it's value to be 1 or 11 if you want it's value to be 11: ");
-                //     result = input.nextInt();
-                // }
-                
+            case "A":                
                 break;
         }
         return result;
     }
 
+    /**
+     * This method creates the card name displayed to the user. It combines the card's number value and
+     * the symbol, both of which are randomly selected. For example: "5 ♣"
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return String that is the combination of the number value and the card's symbol
+     */
     public String setCardName() {
         return cardArr[cardRandomNum] + " " + this.cardSymbol;
     }
 
+    /**
+     * This method randomly selects the card symbol and is assigned to the card object's cardSymbol variable.
+     * 
+     * @author Shane Harper
+     * @version 1.0
+     * @return String that randomly selects one of the four card symbols
+     */
     public String setCardSymbol() {
         int randomNumberSymbol = (int) ( symbols.length * Math.random() );
 
