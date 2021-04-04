@@ -108,10 +108,12 @@ public class Player implements Participant {
 
     public boolean checkIfWinLose(int handValue) {
         if (handValue == 21) {
-            System.out.println("You win!!!");
+            // System.out.println("You win!!!");
             this.playerWinOrLose = true;
         } else if (handValue > 21) {
-            System.out.println("Sorry, you lose.");
+            // System.out.println("Sorry, you lose.");
+            this.playerWinOrLose = false;
+        } else {
             this.playerWinOrLose = false;
         }
         return this.playerWinOrLose;

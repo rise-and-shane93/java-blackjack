@@ -83,7 +83,7 @@ public class BlackjackGameSimulator {
         Scanner scanner = new Scanner(System.in);
         // int playerMoneyStart = moneyStart;
         String playerGameResult = "";
-        String playerHitOrStay;
+        String playerHitOrStay = "";
         boolean boolHitOrStay = false;
         boolean playerLosesOnOwnTurn = false;
         boolean playerPlayAgain = false;
@@ -95,6 +95,7 @@ public class BlackjackGameSimulator {
         boolean initialWin = player.checkIfWinLose(player.playerHandValue);
         if (initialWin) {
             System.out.println("You win!");
+            initialWin = false;
             playerWins = true;
             playerGameResult = "player wins";
         } else {
@@ -139,6 +140,14 @@ public class BlackjackGameSimulator {
             playerGameResult = "player stays";
         }
         // System.out.println(player.playerHandValue);
+
+        // playerGameResult = "";
+        // playerHitOrStay = "";
+        // boolHitOrStay = false;
+        // playerLosesOnOwnTurn = false;
+        // playerPlayAgain = false;
+        // playerWins = false;
+
         return playerGameResult;
     }
 
@@ -151,6 +160,9 @@ public class BlackjackGameSimulator {
         if (dealer.dealerHandValue == 21) {
             result = "Dealer wins";
             System.out.println(result);
+        } else if (dealer.dealerHandValue >= 17 && dealer.dealerHandValue <= 21) {
+            // System.out.println(dealer.dealerHandValue);
+            result = "Dealer has above 17 but less than 21";
         } else {
             while (dealer.dealerHandValue <= 17) {
                 dealer.drawCard(1, false);

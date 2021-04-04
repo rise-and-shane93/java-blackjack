@@ -8,7 +8,7 @@ public class Card {
     private String alphaNumCardValue;
     private int cardRandomNum;
 
-    private static String[] cardArr = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+    private static String[] cardArr = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "K", "K", "K", "K", "K", "K", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"};
     private static String[] symbols = {"♥", "◆", "♠", "♣"};
     
     public Card() {
