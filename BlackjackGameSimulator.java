@@ -17,12 +17,12 @@ public class BlackjackGameSimulator {
 
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
-
+        // initialize the amount of money a player will start out with
         int moneyStart = (int) ( 1000 * Math.random() );
 
         System.out.println("\nLet's play some blackjack. You have $" + moneyStart + " to bet.");
 
+        // instantiate Player and Dealer objects
         Player you = new Player(moneyStart);
 
         Dealer dealer = new Dealer();
@@ -37,8 +37,6 @@ public class BlackjackGameSimulator {
      * you will see later, the String returned from the playerDrawCards method will determine if the game will continue
      * to the player having to take hits, if the player busts, or continuing to the dealer segment.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @param player The player object
      * @param dealer The dealer object
      * @param moneyStart The amount of money that a player starts with (assigned to the player upon instantiating the player object).
@@ -53,47 +51,73 @@ public class BlackjackGameSimulator {
         String dealerGameResult = "";
         int moneyToBet;
 
+        // this loop will keep running until the player is out of money or the player does not want to play again
         while(!player.outOfMoney && playerPlayAgain) {
             System.out.print("Enter how much money as a whole number you would like to bet: ");
 
             moneyToBet = scanner.nextInt();
 
+            // ensures that the player enters a number less than the money they started out with
             while (moneyToBet > moneyStart) {
                 System.out.print("That's more than the money you have. Enter a lower number: ");
                 moneyToBet = scanner.nextInt();
             }
 
+            // get the string result of when the player draws cards
             playerGameResult = playerDrawCards(player, dealer, moneyStart, moneyToBet);
+
+            // run this block if the player stays
             if (playerGameResult.equals("player stays")) {
+
+                // get the string result of the dealer drawing cards
                 dealerGameResult = dealerDrawCards(dealer);
+
+                // run this block if the dealer wins. The player loses money and the program outputs the remaining money.
                 if (dealerGameResult.equals("Dealer wins")) {
                     player.playerMoney -= moneyToBet;
                     System.out.println("You lost $" + moneyToBet + ". You now have $" + player.playerMoney + " left");
+                
+                // run this block if the dealer busts. The player wins money and the program outputs the updated money.
                 } else if (dealerGameResult.equals("Dealer busts")) {
                     player.playerMoney += moneyToBet;
                     System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
+                
+                // run this block if the dealer's point value is between 17 & 21
                 } else if (dealerGameResult.equals("Dealer has above 17 but less than 21")) {
+
+                    // the player has more points than the dealer and wins. Add money to the player's money total
                     if (player.playerHandValue > dealer.dealerHandValue) {
                         player.playerMoney += moneyToBet;
                         System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
+
+                    // The player and dealer tied.
                     } else if (player.playerHandValue == dealer.dealerHandValue) {
                         System.out.println("This game ended in a tie. You neither gained nor lost any money.");
+
+                    // the dealer has more points than the player and wins. Subtract money to the player's money total
                     } else {
                         player.playerMoney -= moneyToBet;
                         System.out.println("You lost $" + moneyToBet + ". You now have $" + player.playerMoney + " left");
                     }
                 }
+            
+            // The player loses and also runs out of money. Re assigns the playerPlayAgain variable to exit the loop
             } else if (playerGameResult.equals("player loses and has run out of money")) {
                 playerPlayAgain = false;
                 break;
+            
+            // The player wins and adds money to their total
             } else if (playerGameResult.equals("player wins")) {
                 player.playerMoney += moneyToBet;
                 System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
             }
+
+            // Asks if the user wants to play again
             System.out.print("Would you like to play again? Press Y for yes or N for no: ");
             playerPlayAgainString = scanner.next();
             playerPlayAgain = playerPlayAgainString.toUpperCase().equals("Y") ? true : false;
 
+            // if the player wants to play again, reset the player's and dealer's point values to 0
             if (playerPlayAgain) {
                 player.playerHandValue = 0;
                 dealer.dealerHandValue = 0;
@@ -110,8 +134,6 @@ public class BlackjackGameSimulator {
      * the first draw, the player wins by taking hits, the player busts, and the player runs out of money. Therefore, the
      * string return type reflects the outcome and is used to determine which code to execute in the blackjackGame method.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @param player The player object
      * @param dealer The dealer object
      * @param moneyToStart The amount of money that the player starts with. This changes based if the player wins or loses money
@@ -127,15 +149,17 @@ public class BlackjackGameSimulator {
         boolean playerPlayAgain = false;
         boolean playerWins = false;
         
-        // while (!player.outOfMoney && )
+        // player draws their first two cards
         player.drawCard(Participant.CARDS_TO_START, true);
 
-        boolean initialWin = player.checkIfWinLose(player.playerHandValue);
+        // checks to see if the player wins after drawing their first two cards
+        boolean initialWin = player.checkIfInitWin(player.playerHandValue);
         if (initialWin) {
             initialWin = false;
             playerWins = true;
             playerGameResult = "player wins";
         } else {
+            // the dealer draws their first two cards and asks if the player wants to hit or stay
             dealer.drawCard(Participant.CARDS_TO_START, true);
             System.out.print("It's your turn. Would you like to hit or stay? Press Y for hit or N for stay: ");
 
@@ -143,36 +167,58 @@ public class BlackjackGameSimulator {
             boolHitOrStay = playerHitOrStay.toUpperCase().equals("Y") ? true : false;
         }
 
+        // run this while loop until the player does not want to play anymore and/or they didn't win after getting their first two cards
         while (boolHitOrStay && !initialWin) {
+
+            // dealer shows their first two cards
             dealer.showHandStart(dealer.currentHand);
+
+            // player draws one card
             player.drawCard(1, false);
+
+            // variable for the player's point value
             int playerCurrHandValue = player.playerHandValue;
-            if (playerCurrHandValue > 21) {
+
+            // player busts
+            if (playerCurrHandValue > Participant.MAX_POINTS) {
+
+                // player loses money equal to the amount they bet
                 player.playerMoney -= moneyToBet;
+
+                // player runs out of money
                 if (player.playerMoney == 0) {
                     player.outOfMoney = true;
                     System.out.println("Sorry, you have run out of money.");
                     playerGameResult = "player loses and has run out of money";
+                // player loses money
                 } else {
                     System.out.println("You busted and lost $" + moneyToBet + ". You now have $" + player.playerMoney + " left");
                     boolHitOrStay = false;
                     playerGameResult = "player loses";
                 }
+
+                // sets playerLosesOnOwnTurn variable to true
                 playerLosesOnOwnTurn = true;
                 break;
-            } else if (playerCurrHandValue == 21) {
+
+            // player wins and adds to their money total
+            } else if (playerCurrHandValue == Participant.MAX_POINTS) {
                 player.playerMoney += moneyToBet;
                 System.out.println("You win and earned $" + moneyToBet + ". You now have $" + player.playerMoney + ".");
                 boolHitOrStay = false;
                 playerWins = true;
                 playerGameResult = "player wins";
                 break;
+
+            // if the player neither wins nor busts, ask if the player wants to hit or stay
             } else {
                 System.out.print("Would you like to hit or stay? Press Y for hit or N for stay: ");
                 boolHitOrStay = scanner.next().toUpperCase().equals("Y") ? true : false;
             }
         }
 
+        /* if the player wants to stay, did not yet lose before the dealer's turn and did not yet lose the round,
+        return "player stays" to the playerGameResult */
         if (!boolHitOrStay && !playerLosesOnOwnTurn && !playerWins) {
             playerGameResult = "player stays";
         }
@@ -187,8 +233,6 @@ public class BlackjackGameSimulator {
      * continue to take hits until it is at least 17. If the dealer busts in the process, then the player wins. Therefore,
      * the result variable is used to reflect the outcome.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @param dealer
      * @return String that will state the result of the method. This will in turn be used to determine the game's progression in the blackjackGame method.
      */
@@ -196,16 +240,23 @@ public class BlackjackGameSimulator {
         String result = "";
         System.out.println("dealer's turn");
 
+        // show the dealer's hand
         dealer.showEntireHand(dealer.currentHand);
-        if (dealer.dealerHandValue == 21) {
+
+        // if the dealer has 21 points, the dealer wins
+        if (dealer.dealerHandValue == Participant.MAX_POINTS) {
             result = "Dealer wins";
             System.out.println(result);
-        } else if (dealer.dealerHandValue >= 17 && dealer.dealerHandValue <= 21) {
+        
+        // if the dealer has between 17 and 21 points, the dealer cannot draw cards
+        } else if (dealer.dealerHandValue >= 17 && dealer.dealerHandValue <= Participant.MAX_POINTS) {
             result = "Dealer has above 17 but less than 21";
+        
+        // run a while loop for the dealer to draw cards until the dealer has at least 17 points or busts
         } else {
             while (dealer.dealerHandValue < 17) {
                 dealer.drawCard(1, false);
-                if (dealer.dealerHandValue > 21) {
+                if (dealer.dealerHandValue > Participant.MAX_POINTS) {
                     result = "Dealer busts";
                     System.out.println(result);
                     break;

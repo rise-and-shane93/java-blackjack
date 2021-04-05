@@ -1,4 +1,11 @@
-import java.util.Scanner;
+/**
+ * The Card class is responsible for generating a random number (from 2-10) card of face card (J, Q, K & A).
+ * In addition, it assigns a random symbol for aesthetics. This class does not assign a value to the ace card
+ * because of blackjack rules around aces.
+ * 
+ * @author Shane Harper
+ * @version 1.0
+ */
 
 public class Card {
 
@@ -12,7 +19,6 @@ public class Card {
     private static String[] symbols = {"♥", "◆", "♠", "♣"};
     
     public Card() {
-        // this.cardName = setCardName();
         this.cardRandomNum = (int) ( cardArr.length * Math.random() );
         this.cardValue = setCardValue();
         this.cardSymbol = setCardSymbol();
@@ -24,24 +30,27 @@ public class Card {
      * random number to select a random element from the cardArr array. All cards except the ace get a value
      * as the ace has special rules.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return int that represents the number value of the card
      */
     public int setCardValue() {
-        // int randomNumberCard = (int) ( cardArr.length * Math.random() );
 
+        // get the random character in the cardArr array
         String stringArrElement = cardArr[cardRandomNum];
         int result = 0;
-        Scanner input = new Scanner(System.in);
 
         switch (stringArrElement) {
+
+            // parse the character as a number if it's a number card (2-10)
             case "2", "3", "4", "5", "6", "7", "8", "9", "10":
                 result = Integer.parseInt(stringArrElement);
                 break;
+            
+            // assign the integer 10 if it's a face card
             case "J", "Q", "K":
                 result = 10;
                 break;
+            
+            // do nothing. The drawCard method in the Dealer and Player classes will assign the value
             case "A":                
                 break;
         }
@@ -52,8 +61,6 @@ public class Card {
      * This method creates the card name displayed to the user. It combines the card's number value and
      * the symbol, both of which are randomly selected. For example: "5 ♣"
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return String that is the combination of the number value and the card's symbol
      */
     public String setCardName() {
@@ -63,8 +70,6 @@ public class Card {
     /**
      * This method randomly selects the card symbol and is assigned to the card object's cardSymbol variable.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return String that randomly selects one of the four card symbols
      */
     public String setCardSymbol() {
@@ -76,8 +81,6 @@ public class Card {
     /**
      * This method returns the card name.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return String that is the card value and the symbol
      */
     public String getCardName() {
@@ -87,8 +90,6 @@ public class Card {
     /**
      * This method returns a random number/face/ace card from the card array.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return String that represents the number or letter of the card (2-10, a face card or an ace)
      */
     public String getCardAlphaNumValue() {
@@ -98,8 +99,6 @@ public class Card {
     /**
      * This method returns the card symbol.
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return String that represents the card symbol
      */
     public String getCardSymbol() {
@@ -109,8 +108,6 @@ public class Card {
     /**
      * This method returns the card's numeric value
      * 
-     * @author Shane Harper
-     * @version 1.0
      * @return int that represents the card's value
      */
     public int getCardValue() {
